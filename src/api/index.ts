@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as bookCtrl from "./book.ctrl";
-import app from "../server";
+import * as userCtrl from "./user.ctrl";
 
 const router = Router();
 
@@ -11,4 +11,7 @@ router.get("/", (req, res, next) => {
 router.get("/book", bookCtrl.getBooks);
 router.get("/book/:book_id", bookCtrl.getBookById);
 router.post("/book", bookCtrl.insertBook);
+
+router.post("/user/signup", userCtrl.signup);
+router.post("/user/login", userCtrl.login);
 export default router;
