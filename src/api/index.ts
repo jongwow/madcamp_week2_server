@@ -14,4 +14,5 @@ router.post("/book", bookCtrl.insertBook);
 
 router.post("/user/signup", userCtrl.signup);
 router.post("/user/login", userCtrl.login);
+router.post("/fbuser/login", userCtrl.fbLogin);
 export default router;

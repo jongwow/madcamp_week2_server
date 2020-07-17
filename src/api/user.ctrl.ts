@@ -1,3 +1,4 @@
+import { RequestHandler } from "express";
 import User from "../models/user";
 
 export const signup = async (req, res, next) => {
@@ -42,5 +43,38 @@ export const login = async (req, res, next) => {
     console.error("login Error");
     console.error(error);
     return res.status(500).send();
+  }
+};
+
+export const fbLogin: RequestHandler = async (req, res, next) => {
+  try {
+    const fbLoginDTO = {
+      email: req.body.email,
+      name: req.body.name,
+      id: req.body.id,
+    };
+  } catch (error) {
+    console.error("fbLoginError");
+    console.error(error);
+    return res.status(500).send();
+  }
+};
+
+export const testLogin: RequestHandler = async (req, res, next) => {
+  try {
+    const testLoginDTO = {
+      data: req.body.name,
+    };
+    if (testLoginDTO.data === "park") {
+      return res.status(400).json({ msg: "Not Park!" });
+    } else {
+      console.log("TEST login Success!!!");
+      console.log(`VALUE: ${testLoginDTO.data}`);
+      return res.status(200).json({ msg: `반환:${testLoginDTO.data}` });
+    }
+  } catch (error) {
+    console.error("testLogin Error");
+    console.error(error);
+    return res.status(500).json({ msg: "에러발생" });
   }
 };
