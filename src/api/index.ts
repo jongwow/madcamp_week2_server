@@ -12,6 +12,7 @@ router.get("/book", bookCtrl.getBooks);
 router.get("/book/:book_id", bookCtrl.getBookById);
 router.post("/book", bookCtrl.insertBook);
 
+router.post("/user/test", userCtrl.testLogin);
 router.post("/user/signup", userCtrl.signup);
 router.post("/user/login", userCtrl.login);
 router.post("/fbuser/login", userCtrl.fbLogin);
