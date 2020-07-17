@@ -11,7 +11,7 @@
 - **NVM**을 통한 Node 설치를 권장.
 - MongoDB 설치 후, `week2` DB를 만들고 ID: kaist, PW: kaist 인 User 생성 권장.
   - 또는 .env 파일 수정을 통해 해당 DB 설정에 맞춰도 상관없음.
-  - 설치 방법(Ubuntu 16.04 LTS 기준)
+  - 설치 방법(Ubuntu 18.04 LTS 기준)
     1. 우선 `sudo apt-get update`을 통해 매니저를 항상 최신상태로 해준다.
     2. `sudo apt-get install mongodb` 명령어 수행
     3. `systemctl status mongodb` 로 잘 설치됐는지 확인.
