@@ -3,7 +3,7 @@ import Book from "../models/book";
 
 export const getBooks: RequestHandler = async (req, res, next) => {
   try {
-    const books = await Book.find({});
+    const books = await Book.find({}).exec();
     if (books.length === 0)
       return res.status(404).send({ err: "존재하지 않음" });
     return res.status(200).json({ msg: "정상", data: books });
