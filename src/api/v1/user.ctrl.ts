@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
-import User from "../models/user";
+import User from "../../models/user";
+import FbUser from "../../models/fbUser";
 
 export const signup = async (req, res, next) => {
   try {
@@ -53,14 +54,23 @@ export const fbLogin: RequestHandler = async (req, res, next) => {
       name: req.body.name,
       id: req.body.id,
     };
+    if (fbLoginDTO.id !== "123123") {
+      // strict comparison이 필요할까?
+      return res.status(404).json({ msg: "Not Authorized", error: true });
+    } else {
+      console.log("TEST login Success!!!");
+      console.log(`VALUE: ${fbLoginDTO.id}`);
+      const fbUser = await FbUser.findOne({ id: "123123" }).exec();
+      return res.status(200).json({ msg: "OK", error: false, user: fbUser });
+    }
   } catch (error) {
-    console.error("fbLoginError");
+    console.error("FBLogin Error");
     console.error(error);
-    return res.status(500).send();
+    return res.status(500).json({ msg: "에러발생", error: false });
   }
 };
 
-export const testLogin: RequestHandler = async (req, res, next) => {
+export const test: RequestHandler = async (req, res, next) => {
   try {
     const testLoginDTO = {
       data: req.body.name,
@@ -71,6 +81,26 @@ export const testLogin: RequestHandler = async (req, res, next) => {
       console.log("TEST login Success!!!");
       console.log(`VALUE: ${testLoginDTO.data}`);
       return res.status(200).json({ msg: `반환:${testLoginDTO.data}` });
+    }
+  } catch (error) {
+    console.error("testLogin Error");
+    console.error(error);
+    return res.status(500).json({ msg: "에러발생" });
+  }
+};
+
+export const testLogin: RequestHandler = async (req, res, next) => {
+  try {
+    const testLoginDTO = {
+      id: req.body.id,
+    };
+    if (testLoginDTO.id !== "123123") {
+      return res.status(400).json({ msg: "Not Authorized" });
+    } else {
+      console.log("TEST login Success!!!");
+      console.log(`VALUE: ${testLoginDTO.id}`);
+      const user = await User.findOne({ name: "김이" }).exec();
+      return res.status(200).json({ msg: "OK", error: false, user: User });
     }
   } catch (error) {
     console.error("testLogin Error");

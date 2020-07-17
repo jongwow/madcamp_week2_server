@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import Book from "../models/book";
+import Book from "../../models/book";
 
 export const getBooks: RequestHandler = async (req, res, next) => {
   try {

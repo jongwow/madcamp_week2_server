@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(Morgan("dev"));
 
 // API 설정
-app.use("/api/v1", api);
+app.use("/api", api);
 
 // 임시 Error Handler (404만)
 app.use(function (req, res, next) {

@@ -1,19 +1,10 @@
 import { Router } from "express";
-import * as bookCtrl from "./book.ctrl";
-import * as userCtrl from "./user.ctrl";
+import v1 from "./v1";
+import v2 from "./v2";
 
 const router = Router();
 
-router.get("/", (req, res, next) => {
-  res.status(200).send("Hello World!");
-});
+router.use("/v1", v1);
+router.use("/v2", v2);
 
-router.get("/book", bookCtrl.getBooks);
-router.get("/book/:book_id", bookCtrl.getBookById);
-router.post("/book", bookCtrl.insertBook);
-
-router.post("/user/test", userCtrl.testLogin);
-router.post("/user/signup", userCtrl.signup);
-router.post("/user/login", userCtrl.login);
-router.post("/fbuser/login", userCtrl.fbLogin);
 export default router;

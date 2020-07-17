@@ -11,7 +11,7 @@ export interface IFbUser extends mongoose.Document {
 const fbUserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  id: { type: String, required: true },
+  id: { type: String, required: true, unique: true },
 });
 const FbUser = mongoose.model<IFbUser>("FbUser", fbUserSchema);
 export default FbUser;
