@@ -6,6 +6,7 @@ export interface IUser extends mongoose.Document {
   salt: string;
   name: string;
   facebook: number;
+  id: string;
 }
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
@@ -13,6 +14,7 @@ const userSchema = new mongoose.Schema({
   salt: { type: String, required: true },
   name: { type: String, required: true },
   facebook: { type: Number, default: 0 },
+  id: { type: String },
 });
 
 const User = mongoose.model<IUser>("User", userSchema);

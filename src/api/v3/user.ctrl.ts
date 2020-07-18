@@ -99,6 +99,7 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
       // 그러면 User에서도 추가해주기
       email: req.body.email,
       name: req.body.name,
+      id: req.body.id,
     };
 
     const facebook = 1;
@@ -109,6 +110,7 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
       salt: "0",
       name: dto.name,
       facebook: facebook,
+      id: dto.id,
     });
 
     const oldUser = await User.findOne({ email: dto.email }).exec();
