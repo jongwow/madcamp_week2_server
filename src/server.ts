@@ -2,8 +2,10 @@ import * as Express from "express";
 import * as bodyParser from "body-parser";
 import * as Morgan from "morgan";
 import * as mongoose from "mongoose";
+import * as path from "path";
 import dbUrl from "./dbUrl";
 import api from "./api";
+import multer = require("multer");
 
 const app = Express();
 
@@ -18,6 +20,8 @@ app.use("/api", api);
 app.use(function (req, res, next) {
   res.status(404).send("Sorry! 존재하지 않는 API이에오!");
 });
+
+app.use("/public", Express.static("public"));
 
 // Node.js의 native Promise 사용
 // mongoose.Promise = Promise; 이젠 필요없다고 한다...?
