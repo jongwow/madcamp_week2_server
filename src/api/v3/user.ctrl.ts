@@ -65,14 +65,14 @@ export const login: RequestHandler = async (req, res, next) => {
     // 이메일이 존재하지 않는 경우
     if (oldUser == null) {
       console.log("Email Not Exist");
-      return res.status(400).json({ msg: "Email Not Exist" });
+      return res.status(400).json({ msg: "Email Not Exist", user: {} });
     } else {
       // 페이스북 아이디로 회원가입된 경우
       if (oldUser.facebook === 1) {
         console.log("Facebook email already exists");
         return res
           .status(400)
-          .json({ msg: "페북 아디 존재. 그걸로 로긴하셈." });
+          .json({ msg: "페북 아디 존재. 그걸로 로긴하셈.", user: {} });
       } else {
         // 해당하는 email이 존재하는 경우
         // salt값을 통한 패스워드 비교
@@ -88,7 +88,7 @@ export const login: RequestHandler = async (req, res, next) => {
           });
         } else {
           console.log("Wrong password");
-          return res.status(400).json({ msg: "Wrong password" });
+          return res.status(400).json({ msg: "Wrong password", user: {} });
         }
       }
     }
