@@ -12,4 +12,7 @@ router.post("/login", userCtrl.login);
 // api/v3/facebook
 router.post("/facebook", userCtrl.facebookLogin);
 
+// api/v3/list
+router.get("/list", userCtrl.getUsers);
+
 export default router;

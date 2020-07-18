@@ -2,6 +2,8 @@ import { RequestHandler } from "express";
 import { checkHashPassword, saltHashPassword } from "../../lib/passwordManager";
 import User from "../../models/user";
 
+const userFilter = { name: 1, email: 1, id: 1, _id: 0 };
+
 export const register: RequestHandler = async (req, res, next) => {
   try {
     console.log(`register start`);
@@ -153,5 +155,16 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
     console.error("facebookLogin Error");
     console.error(error);
     return res.status(500).json({ msg: "Internal Error" });
+  }
+};
+
+export const getUsers: RequestHandler = async (req, res, next) => {
+  try {
+    const users = await User.find().select(userFilter);
+    return res.status(200).json({ msg: "성공", error: false, users: users });
+  } catch (error) {
+    console.error("getUsers Error");
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error", error: true });
   }
 };
