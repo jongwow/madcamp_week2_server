@@ -34,7 +34,12 @@ export const register: RequestHandler = async (req, res, next) => {
       const result = await newUser.save();
 
       console.log("Registraction success");
-      return res.status(200).json({ msg: "Registraction success" });
+      return res
+        .status(200)
+        .json({
+          msg: "Registraction success",
+          user: { name: oldUser.name, email: oldUser.email },
+        });
     } else {
       console.log("이미 존재하는 이메일");
 
@@ -78,7 +83,10 @@ export const login: RequestHandler = async (req, res, next) => {
         const encrypted_password = oldUser.password;
         if (encrypted_password === hashed_password) {
           console.log(`Login Success`);
-          return res.status(200).json({ msg: "Login Success" });
+          return res.status(200).json({
+            msg: "Login Success",
+            user: { name: oldUser.name, email: oldUser.email },
+          });
         } else {
           console.log("Wrong password");
           return res.status(200).json({ msg: "Wrong password" });
@@ -119,11 +127,17 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
           console.error(err);
           return res.status(500).json({ msg: "Facebook Registration failure" });
         } else {
-          return res.status(200).json({ msg: "Facebook Registration success" });
+          return res.status(200).json({
+            msg: "Facebook Registration success",
+            user: { name: oldUser.name, email: oldUser.email },
+          });
         }
       });
     } else {
-      return res.status(200).json({ msg: "Facebook Registration success" });
+      return res.status(200).json({
+        msg: "Facebook Registration success",
+        user: { name: oldUser.name, email: oldUser.email },
+      });
     }
   } catch (error) {
     console.error("facebookLogin Error");
