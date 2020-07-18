@@ -37,7 +37,11 @@ export const register: RequestHandler = async (req, res, next) => {
       console.log("Registraction success");
       return res.status(200).json({
         msg: "Registraction success",
-        user: { name: newUser.name, email: newUser.email },
+        user: {
+          name: newUser.name,
+          email: newUser.email,
+          phone: newUser.phone,
+        },
       });
     } else {
       console.log("이미 존재하는 이메일");
@@ -66,7 +70,7 @@ export const login: RequestHandler = async (req, res, next) => {
     // 이메일이 존재하지 않는 경우
     if (oldUser == null) {
       console.log("Email Not Exist");
-      return res.status(400).json({ msg: "Email Not Exist", user: {} });
+      return res.status(400).json({ msg: "Email Not Exist" });
     } else {
       // 해당하는 email이 존재하는 경우
       // salt값을 통한 패스워드 비교
@@ -78,11 +82,15 @@ export const login: RequestHandler = async (req, res, next) => {
         console.log(`Login Success`);
         return res.status(200).json({
           msg: "Login Success",
-          user: { name: oldUser.name, email: oldUser.email },
+          user: {
+            name: oldUser.name,
+            email: oldUser.email,
+            phone: oldUser.phone,
+          },
         });
       } else {
         console.log("Wrong password");
-        return res.status(400).json({ msg: "Wrong password", user: {} });
+        return res.status(400).json({ msg: "Wrong password" });
       }
     }
   } catch (error) {
@@ -123,14 +131,22 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
         } else {
           return res.status(200).json({
             msg: "Facebook Registration success",
-            user: { name: newUser.name, email: newUser.email },
+            user: {
+              name: newUser.name,
+              email: newUser.email,
+              phone: newUser.phone,
+            },
           });
         }
       });
     } else {
       return res.status(200).json({
         msg: "Facebook Registration success",
-        user: { name: oldUser.name, email: oldUser.email },
+        user: {
+          name: oldUser.name,
+          email: oldUser.email,
+          phone: newUser.phone,
+        },
       });
     }
   } catch (error) {
