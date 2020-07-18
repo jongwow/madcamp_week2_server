@@ -7,7 +7,7 @@ const router = Router();
 router.post("/register", userCtrl.register);
 
 // api/v3/login
-router.post("/list", userCtrl.login);
+router.post("/login", userCtrl.login);
 
 // api/v3/facebook
 router.post("/facebook", userCtrl.facebookLogin);
