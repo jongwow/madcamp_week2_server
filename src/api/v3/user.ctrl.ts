@@ -27,7 +27,7 @@ export const register: RequestHandler = async (req, res, next) => {
       facebook: facebook,
     };
 
-    const oldUser = await User.findOne({ email: email, facebook: 0 }).exec();
+    const oldUser = await User.findOne({ email: email }).exec();
 
     if (oldUser == null) {
       const newUser = new User(insertJson);
@@ -67,29 +67,21 @@ export const login: RequestHandler = async (req, res, next) => {
       console.log("Email Not Exist");
       return res.status(400).json({ msg: "Email Not Exist", user: {} });
     } else {
-      // 페이스북 아이디로 회원가입된 경우
-      if (oldUser.facebook === 1) {
-        console.log("Facebook email already exists");
-        return res
-          .status(400)
-          .json({ msg: "페북 아디 존재. 그걸로 로긴하셈.", user: {} });
+      // 해당하는 email이 존재하는 경우
+      // salt값을 통한 패스워드 비교
+      const salt = oldUser.salt;
+      const hashed_password = checkHashPassword(dto.password, salt)
+        .passwordHash;
+      const encrypted_password = oldUser.password;
+      if (encrypted_password === hashed_password) {
+        console.log(`Login Success`);
+        return res.status(200).json({
+          msg: "Login Success",
+          user: { name: oldUser.name, email: oldUser.email },
+        });
       } else {
-        // 해당하는 email이 존재하는 경우
-        // salt값을 통한 패스워드 비교
-        const salt = oldUser.salt;
-        const hashed_password = checkHashPassword(dto.password, salt)
-          .passwordHash;
-        const encrypted_password = oldUser.password;
-        if (encrypted_password === hashed_password) {
-          console.log(`Login Success`);
-          return res.status(200).json({
-            msg: "Login Success",
-            user: { name: oldUser.name, email: oldUser.email },
-          });
-        } else {
-          console.log("Wrong password");
-          return res.status(400).json({ msg: "Wrong password", user: {} });
-        }
+        console.log("Wrong password");
+        return res.status(400).json({ msg: "Wrong password", user: {} });
       }
     }
   } catch (error) {
