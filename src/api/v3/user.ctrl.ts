@@ -34,12 +34,10 @@ export const register: RequestHandler = async (req, res, next) => {
       const result = await newUser.save();
 
       console.log("Registraction success");
-      return res
-        .status(200)
-        .json({
-          msg: "Registraction success",
-          user: { name: oldUser.name, email: oldUser.email },
-        });
+      return res.status(200).json({
+        msg: "Registraction success",
+        user: { name: newUser.name, email: newUser.email },
+      });
     } else {
       console.log("이미 존재하는 이메일");
 
