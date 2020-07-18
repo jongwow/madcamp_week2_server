@@ -62,7 +62,7 @@ export const login: RequestHandler = async (req, res, next) => {
 
     const oldUser = await User.findOne({ email: dto.email }).exec();
     // 이메일이 존재하는 경우
-    if (oldUser != null) {
+    if (oldUser == null) {
       console.log("Email Not Exist");
       return res.status(200).json({ msg: "Email Not Exist" });
     } else {
