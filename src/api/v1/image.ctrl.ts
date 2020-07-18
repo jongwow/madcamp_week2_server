@@ -84,10 +84,22 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
 
 export const getImageUrls: RequestHandler = async (req, res, next) => {
   try {
-    const urls = await TmpImage.find().select({ fileName: 1, _id: 0 });
-    return res.status(200).json({ msg: "성공", urls });
+    const oldUrls = await TmpImage.find().select({ fileName: 1, _id: 0 });
+    const urls = oldUrls.map(({ fileName: value, ...rest }) => value);
+    return res.status(200).json({ msg: "성공", error: false, urls });
   } catch (error) {
     console.error(`getImageUrls Error`);
     console.error(error);
+    return res.status(500).json({ msg: "Internal Error", error: true });
+  }
+};
+
+export const deleteImageByName: RequestHandler = async (req, res, next) => {
+  try {
+    return res.status(200).json({ msg: "아직 구현 미완" });
+  } catch (error) {
+    console.error(`DeleteImage Error`);
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error", error: true });
   }
 };
