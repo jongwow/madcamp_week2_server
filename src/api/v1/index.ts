@@ -14,6 +14,7 @@ router.get("/image", imageCtrl.getRandomImage);
 router.get("/image/list", imageCtrl.getImageUrls);
 router.post("/image/upload", uploader.single("img"), imageCtrl.uploadImage);
 router.get("/image/:image_name", imageCtrl.getImageByName);
+router.delete("/image/:image_name", imageCtrl.deleteImageByName);
 
 router.get("/book", bookCtrl.getBooks);
 router.get("/book/:book_id", bookCtrl.getBookById);
