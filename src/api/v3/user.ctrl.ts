@@ -122,7 +122,7 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
         } else {
           return res.status(200).json({
             msg: "Facebook Registration success",
-            user: { name: oldUser.name, email: oldUser.email },
+            user: { name: newUser.name, email: newUser.email },
           });
         }
       });
