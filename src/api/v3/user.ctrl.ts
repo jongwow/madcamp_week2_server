@@ -41,7 +41,7 @@ export const register: RequestHandler = async (req, res, next) => {
     } else {
       console.log("이미 존재하는 이메일");
 
-      return res.status(200).json({ msg: "Email already exists" });
+      return res.status(400).json({ msg: "Email already exists" });
     }
   } catch (error) {
     console.error("register Error");
@@ -65,13 +65,13 @@ export const login: RequestHandler = async (req, res, next) => {
     // 이메일이 존재하지 않는 경우
     if (oldUser == null) {
       console.log("Email Not Exist");
-      return res.status(200).json({ msg: "Email Not Exist" });
+      return res.status(400).json({ msg: "Email Not Exist" });
     } else {
       // 페이스북 아이디로 회원가입된 경우
       if (oldUser.facebook === 1) {
         console.log("Facebook email already exists");
         return res
-          .status(200)
+          .status(400)
           .json({ msg: "페북 아디 존재. 그걸로 로긴하셈." });
       } else {
         // 해당하는 email이 존재하는 경우
@@ -88,7 +88,7 @@ export const login: RequestHandler = async (req, res, next) => {
           });
         } else {
           console.log("Wrong password");
-          return res.status(200).json({ msg: "Wrong password" });
+          return res.status(400).json({ msg: "Wrong password" });
         }
       }
     }
