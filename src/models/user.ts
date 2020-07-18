@@ -5,6 +5,7 @@ export interface IUser extends mongoose.Document {
   password: string;
   salt: string;
   name: string;
+  phone: string;
   facebook: number;
   id: string;
 }
@@ -14,6 +15,7 @@ const userSchema = new mongoose.Schema({
   salt: { type: String, required: true },
   name: { type: String, required: true },
   facebook: { type: Number, default: 0 },
+  phone: { type: String },
   id: { type: String },
 });
 

@@ -25,6 +25,7 @@ export const register: RequestHandler = async (req, res, next) => {
       salt: salt,
       name: name,
       facebook: facebook,
+      phone: req.body.phone,
     };
 
     const oldUser = await User.findOne({ email: email }).exec();
