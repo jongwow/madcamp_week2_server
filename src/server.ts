@@ -2,8 +2,7 @@ import * as Express from "express";
 import * as bodyParser from "body-parser";
 import * as Morgan from "morgan";
 import * as mongoose from "mongoose";
-import * as path from "path";
-import dbUrl from "./dbUrl";
+import dbUrl from "./lib/dbUrl";
 import api from "./api";
 import multer = require("multer");
 

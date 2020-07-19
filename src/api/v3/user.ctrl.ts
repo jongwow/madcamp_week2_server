@@ -7,16 +7,16 @@ const userFilter = { name: 1, email: 1, id: 1, phone: 1, _id: 0 };
 export const register: RequestHandler = async (req, res, next) => {
   try {
     console.log(`register start`);
-    const post_data = req.body;
-    const plain_password = post_data.password;
-    const hash_data = saltHashPassword(plain_password);
+    const dto = req.body;
+    const plainPassword = dto.password;
+    const hashData = saltHashPassword(plainPassword);
 
     // get 3 변수 from 사용자
-    const password = hash_data.passwordHash;
-    const salt = hash_data.salt;
+    const password = hashData.passwordHash;
+    const salt = hashData.salt;
 
-    const name = post_data.name;
-    const email = post_data.email;
+    const name = dto.name;
+    const email = dto.email;
 
     // 페이스북 로그인이 아님
     const facebook = 0;
@@ -77,10 +77,9 @@ export const login: RequestHandler = async (req, res, next) => {
       // 해당하는 email이 존재하는 경우
       // salt값을 통한 패스워드 비교
       const salt = oldUser.salt;
-      const hashed_password = checkHashPassword(dto.password, salt)
-        .passwordHash;
-      const encrypted_password = oldUser.password;
-      if (encrypted_password === hashed_password) {
+      const hashedPassword = checkHashPassword(dto.password, salt).passwordHash;
+      const encryptedPassword = oldUser.password;
+      if (encryptedPassword === hashedPassword) {
         console.log(`Login Success`);
         return res.status(200).json({
           msg: "Login Success",
