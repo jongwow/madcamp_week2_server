@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { checkHashPassword, saltHashPassword } from "../../lib/passwordManager";
 import User from "../../models/user";
 
-const userFilter = { name: 1, email: 1, id: 1, phone: 1, _id: 0 };
+const userFilter = { __v: 0 };
 
 export const register: RequestHandler = async (req, res, next) => {
   try {

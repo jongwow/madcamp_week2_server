@@ -8,6 +8,7 @@ export interface IUser extends mongoose.Document {
   phone: string;
   facebook: number;
   id: string;
+  lastChecked: Date;
 }
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema({
   facebook: { type: Number, default: 0 },
   phone: { type: String, default: "010-0000-0000" },
   id: { type: String },
+  lastChecked: { type: Date }, // 가장 최근에 출쳌한 날
 });
 
 const User = mongoose.model<IUser>("User", userSchema);

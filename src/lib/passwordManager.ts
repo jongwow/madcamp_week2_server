@@ -1,6 +1,6 @@
 import * as crypto from "crypto-js";
 
-const generateRandomString = (length: number) =>
+export const generateRandomString = (length: number) =>
   crypto.lib.WordArray.random(Math.ceil(length / 2))
     .toString(crypto.enc.Hex)
     .slice(0, length);
