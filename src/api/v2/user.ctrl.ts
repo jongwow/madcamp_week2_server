@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import User from "../../models/fbUser";
 
-const userFilter = { name: 1, email: 1, id: 1, imageUrl: 1, _id: 0 };
+const userFilter = { __v: 0 };
 
 export const login: RequestHandler = async (req, res, next) => {
   try {
