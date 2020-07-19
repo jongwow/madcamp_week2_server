@@ -7,7 +7,25 @@ import { endOfDay, isSameDay, startOfDay } from "date-fns";
 import { isValidObjectId } from "mongoose";
 const userFilter = { __v: 0 };
 
-//
+/**
+ * @typedef defaultResponse
+ * @property {String} msg - 메세지
+ */
+
+/**
+ * 출석체크를 한다.(관리자용)
+ *
+ * **요청**
+ * ```
+ * req.query.token - 출석에 필요한 token String
+ * ```
+ * **응답**
+ * ```
+ * 200 - {msg: '출석완료: (출석날짜)'}
+ * 404 - {msg: '존재하지 않는 token'}
+ * 500 - {msg: 'Internal Error'} // 서버 에러.
+ * ```
+ */
 export const checkToken: RequestHandler = async (req, res, next) => {
   try {
     const dto = {
@@ -40,10 +58,29 @@ export const checkToken: RequestHandler = async (req, res, next) => {
   }
 };
 
-// 유저가 email과 본인의 _id를 주면 token을 랜덤으로 생성해서 서버에 저장해놓자..
-// 그리고 반환으로 유저에게 그 token값을 준다.
-// 그러면 user는 그 토큰값을 이용해 QR 코드를 생성할 수 있다.
+/**
+ * 출석체크에 필요한 Token을 반환한다.(학생용)
+ *
+ * ### 요청
+ * ```
+ * req.body._id - user의 _id값. DB의 _id임
+ * ```
+ *
+ * ### 응답
+ * ```
+ * 400 - {msg:'유효하지 않은 ID입니다.'} // _id값이 ObjectId의 형태가 아닐 때
+ * 400 - {msg:'존재하지 않는 ID입니다.'} // _id값으로 user가 조회되지 않을 때
+ * 409 - {msg:'Already Checked'} // 해당 _id값이 이미 출석체크가 완료됐을 때
+ * 200 - {msg: "duplicated resource", token: string} // 이미 token이 발행됐을 때
+ * 200 - {token: string} // 정상적으로 토큰이 발행됐을 때
+ * 500 - {msg: 'Internal Error'} // 서버 에러
+ * ```
+ *
+ */
 export const getToken: RequestHandler = async (req, res, next) => {
+  // 유저가 email과 본인의 _id를 주면 token을 랜덤으로 생성해서 서버에 저장해놓자..
+  // 그리고 반환으로 유저에게 그 token값을 준다.
+  // 그러면 user는 그 토큰값을 이용해 QR 코드를 생성할 수 있다.
   try {
     // 요청된 id와 random String(token)을 QrRecrod에 저장함.
     const dto = {
@@ -73,10 +110,10 @@ export const getToken: RequestHandler = async (req, res, next) => {
     }
 
     // TODO: 테스트 끝나면 주석 지워주기.
-    // if (isSameDay(requestUser.lastChecked, new Date())) {
-    //   // 오늘 이미 출석체크한 경우
-    //   return res.status(HTTP.OK).json({ msg: "Already Checked" });
-    // }
+    if (isSameDay(requestUser.lastChecked, new Date())) {
+      // 오늘 이미 출석체크한 경우
+      return res.status(HTTP.CONFLICT).json({ msg: "Already Checked" });
+    }
 
     // 오늘 이미 요청했었던 사용자라면(token이 존재한다면) 그 token값을 그대로 반환해버림.
     const oldToken = await QrRecord.findOne({
