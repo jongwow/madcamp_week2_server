@@ -149,7 +149,8 @@ export const scanQr: RequestHandler = async (req, res, next) => {
     if (token == null) {
       // 유효하지 않은 token입니다.
       console.log("Invalid Input: " + token);
-      console.log("body:" + JSON.stringify(token));
+      console.log("query:" + JSON.stringify(req.query));
+      console.log("params:" + JSON.stringify(req.params));
       return res.status(HTTP.BAD_REQUEST).json({ msg: `Invalid Input` });
     }
 
@@ -221,9 +222,11 @@ export const check: RequestHandler = async (req, res, next) => {
       { lastChecked: new Date() }
     ).exec();
 
+		console.log(`${user.lastChecked}`);
+
     return res
       .status(HTTP.OK)
-      .json({ msg: `${user.lastChecked.toUTCString()} 출석완료` });
+      .json({ msg: `${user.lastChecked} 출석완료` });
   } catch (error) {
     console.error(`check Error`);
     console.error(error);
