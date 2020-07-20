@@ -179,15 +179,18 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     };
     console.log(`refreshToken start:${dto.token}`);
 
-    const oldToken = await Token.findOne({ token: dto.token }).exec();
+    const oldToken = await Token.find({}).exec();
 
-    let msg: string = "refresh token";
+    let msg: string = "token not found. just publish new token";
+
     // 유효한 token 이라면 기존의 token을 삭제한다.
     if (oldToken != null) {
       console.log(`--delete previous token:${dto.token}`);
-      await oldToken.deleteOne();
-      msg = "token not found. just publish new token";
+      for (const item of oldToken) {
+        await item.deleteOne();
+      }
     }
+    msg = "refresh token";
 
     // token 값을 random으로 생성 후 저장
     const token = generateRandomString(64);
@@ -222,11 +225,9 @@ export const check: RequestHandler = async (req, res, next) => {
       { lastChecked: new Date() }
     ).exec();
 
-		console.log(`${user.lastChecked}`);
+    console.log(`${user.lastChecked}`);
 
-    return res
-      .status(HTTP.OK)
-      .json({ msg: `${user.lastChecked} 출석완료` });
+    return res.status(HTTP.OK).json({ msg: `${user.lastChecked} 출석완료` });
   } catch (error) {
     console.error(`check Error`);
     console.error(error);
