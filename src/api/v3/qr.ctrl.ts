@@ -149,6 +149,7 @@ export const scanQr: RequestHandler = async (req, res, next) => {
     if (token == null) {
       // 유효하지 않은 token입니다.
       console.log("Invalid Input: " + token);
+      console.log("body:" + JSON.stringify(token));
       return res.status(HTTP.BAD_REQUEST).json({ msg: `Invalid Input` });
     }
 
