@@ -9,6 +9,7 @@ export interface IUser extends mongoose.Document {
   facebook: number;
   id: string;
   lastChecked: Date;
+  temperature: string;
 }
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, default: "010-0000-0000" },
   id: { type: String },
   lastChecked: { type: Date }, // 가장 최근에 출쳌한 날
+  temperature: { type: String },
 });
 
 const User = mongoose.model<IUser>("User", userSchema);

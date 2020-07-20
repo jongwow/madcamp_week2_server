@@ -222,7 +222,7 @@ export const check: RequestHandler = async (req, res, next) => {
 
     const user = await User.findOneAndUpdate(
       { email },
-      { lastChecked: new Date() }
+      { lastChecked: new Date(), temperature }
     ).exec();
 
     console.log(`${user.lastChecked}`);
