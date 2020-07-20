@@ -16,10 +16,13 @@ router.post("/facebook", userCtrl.facebookLogin);
 // api/v3/list
 router.get("/list", userCtrl.getUsers);
 
-// api/v3/qr/ckeck
-router.get("/qr/check", qrCtrl.checkToken);
+// api/v3/qr/
+router.get("/qr", qrCtrl.scanQr);
 
-// api/v3/qr/token
-router.post("/qr/token", qrCtrl.getToken);
+// api/v3/check
+router.post("/check", qrCtrl.check);
+
+// api/v3/refresh
+router.get("/refresh", qrCtrl.refreshToken);
 
 export default router;

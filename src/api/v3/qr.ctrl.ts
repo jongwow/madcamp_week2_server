@@ -5,6 +5,7 @@ import User from "../../models/user";
 import * as HTTP from "http-status-codes";
 import { endOfDay, isSameDay, startOfDay } from "date-fns";
 import { isValidObjectId } from "mongoose";
+import Token from "../../models/token";
 const userFilter = { __v: 0 };
 
 /**
@@ -139,5 +140,88 @@ export const getToken: RequestHandler = async (req, res, next) => {
     console.error("getToken Error");
     console.error(error);
     return res.status(500).json({ msg: "Internal Error", error: true });
+  }
+};
+
+export const scanQr: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.query.token as string;
+    if (token == null) {
+      // 유효하지 않은 token입니다.
+      console.log("Invalid Input: " + token);
+      return res.status(HTTP.BAD_REQUEST).json({ msg: `Invalid Input` });
+    }
+
+    const oldToken = await Token.findOne({ token }).exec();
+    if (oldToken == null) {
+      console.log("Token not exists: " + token);
+      return res
+        .status(HTTP.BAD_REQUEST)
+        .json({ msg: `존재하지 않은 Token 입니다.` });
+    }
+    const result = await oldToken.deleteOne();
+    const currentTime = new Date().toUTCString;
+    console.log(`currentTime:${currentTime}`);
+    return res.status(HTTP.OK).json({ msg: `${currentTime}` });
+  } catch (error) {
+    console.error(`scanQr Error`);
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error" });
+  }
+};
+
+export const refreshToken: RequestHandler = async (req, res, next) => {
+  try {
+    const dto = {
+      token: req.query.token as string,
+    };
+    console.log(`refreshToken start:${dto.token}`);
+
+    const oldToken = await Token.findOne({ token: dto.token }).exec();
+
+    // 유효한 token 이라면 기존의 token을 삭제한다.
+    console.log(`--delete previous token:${dto.token}`);
+    await oldToken.deleteOne();
+
+    // token 값을 random으로 생성 후 저장
+    const token = generateRandomString(64);
+    const newToken = new Token({ token, date: new Date() });
+    let saveToken = await newToken.save();
+    console.log(`--save new token${saveToken}`);
+
+    return res.status(HTTP.OK).json({ msg: "refresh token", token });
+  } catch (error) {
+    console.error("checkKey Error");
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error", error: true });
+  }
+};
+
+export const check: RequestHandler = async (req, res, next) => {
+  try {
+    const temperature = req.body.temperature as string;
+    const email = req.body.email as string;
+    const requestUser = await User.findOne({ email }).exec();
+    if (requestUser == null) {
+      return res.status(HTTP.BAD_REQUEST).json({ msg: "Email doesn't exist" });
+    }
+
+    if (isSameDay(requestUser.lastChecked, new Date())) {
+      // 오늘 이미 출석체크한 경우
+      return res.status(HTTP.CONFLICT).json({ msg: "Already Checked" });
+    }
+
+    const user = await User.findOneAndUpdate(
+      { email },
+      { lastChecked: new Date() }
+    ).exec();
+
+    return res
+      .status(HTTP.OK)
+      .json({ msg: `${user.lastChecked.toUTCString()} 출석완료` });
+  } catch (error) {
+    console.error(`check Error`);
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error" });
   }
 };
