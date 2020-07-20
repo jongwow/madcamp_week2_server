@@ -179,9 +179,13 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
 
     const oldToken = await Token.findOne({ token: dto.token }).exec();
 
+    let msg: string = "refresh token";
     // 유효한 token 이라면 기존의 token을 삭제한다.
-    console.log(`--delete previous token:${dto.token}`);
-    await oldToken.deleteOne();
+    if (oldToken != null) {
+      console.log(`--delete previous token:${dto.token}`);
+      await oldToken.deleteOne();
+      msg = "token not found. just publish new token";
+    }
 
     // token 값을 random으로 생성 후 저장
     const token = generateRandomString(64);
@@ -189,7 +193,7 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     let saveToken = await newToken.save();
     console.log(`--save new token${saveToken}`);
 
-    return res.status(HTTP.OK).json({ msg: "refresh token", token });
+    return res.status(HTTP.OK).json({ msg: msg, token });
   } catch (error) {
     console.error("checkKey Error");
     console.error(error);
