@@ -165,7 +165,9 @@ export const scanQr: RequestHandler = async (req, res, next) => {
     const result = await oldToken.deleteOne();
     const currentTime = new Date().toUTCString;
     console.log(`currentTime:${currentTime}`);
-    io.emit("message");
+
+    io.sockets.emit("message", JSON.stringify({ msg: "OK", token }));
+
     return res.status(HTTP.OK).json({ msg: `${currentTime}` });
   } catch (error) {
     console.error(`scanQr Error`);
@@ -199,8 +201,6 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     const newToken = new Token({ token, date: new Date() });
     let saveToken = await newToken.save();
     console.log(`--save new token${saveToken}`);
-
-    io.emit("message", JSON.stringify({ msg, token }));
 
     return res.status(HTTP.OK).json({ msg: msg, token });
   } catch (error) {
