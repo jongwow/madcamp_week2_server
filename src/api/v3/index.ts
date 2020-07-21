@@ -32,4 +32,6 @@ router.post("/image", uploader.single("img"), imageCtrl.uploadImage);
 router.get("/image", imageCtrl.getImageUrls);
 router.get("/image/:image_name", imageCtrl.getImageByName);
 
+router.get("/testing", qrCtrl.testing);
+
 export default router;

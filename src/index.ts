@@ -15,8 +15,8 @@ const http = server.listen(port, () => {
 });
 
 // socket 열기
-const io = Socket(http);
+export const io = Socket(http);
 
 io.on("connect", (socket) => {
-  io.emit("connect", JSON.stringify({ message: "Connected" }));
+  console.log(`Hello~New User is connected`);
 });
