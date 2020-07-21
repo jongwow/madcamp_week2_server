@@ -3,6 +3,7 @@ import uploader from "../../lib/fileManager";
 import * as userCtrl from "./user.ctrl";
 import * as qrCtrl from "./qr.ctrl";
 import * as imageCtrl from "./image.ctrl";
+import * as profileCtrl from "./profile.ctrl";
 
 const router = Router();
 
@@ -31,6 +32,10 @@ router.get("/refresh", qrCtrl.refreshToken);
 router.post("/image", uploader.single("img"), imageCtrl.uploadImage);
 router.get("/image", imageCtrl.getImageUrls);
 router.get("/image/:image_name", imageCtrl.getImageByName);
+
+// api/v3/profile
+router.post("/profile", uploader.single("img"), profileCtrl.uploadImage);
+router.get("/profile/:image_name", profileCtrl.getImageByName);
 
 router.get("/testing", qrCtrl.testing);
 

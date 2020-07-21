@@ -10,6 +10,7 @@ export interface IUser extends mongoose.Document {
   id: string;
   lastChecked: Date;
   temperature: string;
+  profileImage: string;
 }
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
@@ -21,6 +22,7 @@ const userSchema = new mongoose.Schema({
   id: { type: String },
   lastChecked: { type: Date }, // 가장 최근에 출쳌한 날
   temperature: { type: String },
+  profileImage: { type: String },
 });
 
 const User = mongoose.model<IUser>("User", userSchema);
