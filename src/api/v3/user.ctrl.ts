@@ -67,27 +67,23 @@ export const login: RequestHandler = async (req, res, next) => {
       password: req.body.password,
     };
 
-    const oldUser = await User.findOne({ email: dto.email }).exec();
+    const user = await User.findOne({ email: dto.email }).exec();
 
     // 이메일이 존재하지 않는 경우
-    if (oldUser == null) {
+    if (user == null) {
       console.log("Email Not Exist");
       return res.status(400).json({ msg: "Email Not Exist" });
     } else {
       // 해당하는 email이 존재하는 경우
       // salt값을 통한 패스워드 비교
-      const salt = oldUser.salt;
+      const salt = user.salt;
       const hashedPassword = checkHashPassword(dto.password, salt).passwordHash;
-      const encryptedPassword = oldUser.password;
+      const encryptedPassword = user.password;
       if (encryptedPassword === hashedPassword) {
         console.log(`Login Success`);
         return res.status(200).json({
           msg: "Login Success",
-          user: {
-            name: oldUser.name,
-            email: oldUser.email,
-            phone: oldUser.phone,
-          },
+          user,
         });
       } else {
         console.log("Wrong password");
