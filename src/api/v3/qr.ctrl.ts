@@ -7,6 +7,7 @@ import { endOfDay, isSameDay, startOfDay } from "date-fns";
 import { isValidObjectId } from "mongoose";
 import Token from "../../models/token";
 const userFilter = { __v: 0 };
+const io = require("socket.io")();
 
 /**
  * @typedef defaultResponse
@@ -164,6 +165,7 @@ export const scanQr: RequestHandler = async (req, res, next) => {
     const result = await oldToken.deleteOne();
     const currentTime = new Date().toUTCString;
     console.log(`currentTime:${currentTime}`);
+    io.emit("message");
     return res.status(HTTP.OK).json({ msg: `${currentTime}` });
   } catch (error) {
     console.error(`scanQr Error`);
@@ -197,6 +199,8 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     const newToken = new Token({ token, date: new Date() });
     let saveToken = await newToken.save();
     console.log(`--save new token${saveToken}`);
+
+    io.emit("message", JSON.stringify({ msg, token }));
 
     return res.status(HTTP.OK).json({ msg: msg, token });
   } catch (error) {
@@ -233,4 +237,29 @@ export const check: RequestHandler = async (req, res, next) => {
     console.error(error);
     return res.status(500).json({ msg: "Internal Error" });
   }
+};
+
+export const refreshTokenByToken = async (token: string) => {
+  console.log(`refreshToken start:${token}`);
+
+  const oldToken = await Token.find({}).exec();
+
+  let msg: string = "token not found. just publish new token";
+
+  // 유효한 token 이라면 기존의 token을 삭제한다.
+  if (oldToken != null) {
+    console.log(`--delete previous token:${token}`);
+    for (const item of oldToken) {
+      await item.deleteOne();
+    }
+  }
+  msg = "refresh token";
+
+  // token 값을 random으로 생성 후 저장
+  const newToken = generateRandomString(64);
+  const newTokenDao = new Token({ token, date: new Date() });
+  let saveToken = await newTokenDao.save();
+  console.log(`--save new token${saveToken}`);
+
+  return { msg: "OK", token: newToken };
 };

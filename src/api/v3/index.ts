@@ -1,6 +1,8 @@
 import { Router } from "express";
+import uploader from "../../lib/fileManager";
 import * as userCtrl from "./user.ctrl";
 import * as qrCtrl from "./qr.ctrl";
+import * as imageCtrl from "./image.ctrl";
 
 const router = Router();
 
@@ -24,5 +26,10 @@ router.post("/check", qrCtrl.check);
 
 // api/v3/refresh
 router.get("/refresh", qrCtrl.refreshToken);
+
+// api/v3/
+router.post("/image", uploader.single("img"), imageCtrl.uploadImage);
+router.get("/image", imageCtrl.getImageUrls);
+router.get("/image/:image_name", imageCtrl.getImageByName);
 
 export default router;
