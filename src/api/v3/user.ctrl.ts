@@ -30,7 +30,9 @@ export const register: RequestHandler = async (req, res, next) => {
       phone: req.body.phone,
     };
 
-    const oldUser = await User.findOne({ email: email }).exec();
+    const oldUser = await User.findOne({ email: email })
+      .select(userFilter)
+      .exec();
 
     if (oldUser == null) {
       const newUser = new User(insertJson);
@@ -39,11 +41,7 @@ export const register: RequestHandler = async (req, res, next) => {
       console.log("Registraction success");
       return res.status(200).json({
         msg: "Registraction success",
-        user: {
-          name: newUser.name,
-          email: newUser.email,
-          phone: newUser.phone,
-        },
+        user: result,
       });
     } else {
       console.log("이미 존재하는 이메일");
@@ -67,7 +65,9 @@ export const login: RequestHandler = async (req, res, next) => {
       password: req.body.password,
     };
 
-    const user = await User.findOne({ email: dto.email }).exec();
+    const user = await User.findOne({ email: dto.email })
+      .select(userFilter)
+      .exec();
 
     // 이메일이 존재하지 않는 경우
     if (user == null) {
@@ -119,8 +119,10 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
       id: dto.id,
     });
 
-    const oldUser = await User.findOne({ email: dto.email }).exec();
-    if (oldUser == null) {
+    const user = await User.findOne({ email: dto.email })
+      .select(userFilter)
+      .exec();
+    if (user == null) {
       newUser.save((err) => {
         if (err) {
           console.error(err);
@@ -128,22 +130,14 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
         } else {
           return res.status(200).json({
             msg: "Facebook Registration success",
-            user: {
-              name: newUser.name,
-              email: newUser.email,
-              phone: newUser.phone,
-            },
+            user,
           });
         }
       });
     } else {
       return res.status(200).json({
         msg: "Facebook Registration success",
-        user: {
-          name: oldUser.name,
-          email: oldUser.email,
-          phone: newUser.phone,
-        },
+        user,
       });
     }
   } catch (error) {
