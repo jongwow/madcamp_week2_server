@@ -11,12 +11,12 @@ const port = PORT || 3000;
 
 // Server 열기
 const http = server.listen(port, () => {
-  console.log(`listening to port ${port}`);
+	console.log(`listening to port ${port}`);
 });
 
 // socket 열기
 const io = Socket(http);
 
-io.on("connect", (socket) => {
-  io.emit("connect", JSON.stringify({ message: "Connected" }));
+io.on("connect", socket => {
+	console.log("new User is Connected!");
 });
