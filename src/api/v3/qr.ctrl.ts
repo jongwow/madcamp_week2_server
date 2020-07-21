@@ -6,8 +6,8 @@ import * as HTTP from "http-status-codes";
 import { endOfDay, isSameDay, startOfDay } from "date-fns";
 import { isValidObjectId } from "mongoose";
 import Token from "../../models/token";
+import { io } from "../.."; //TODO: 이딴 구조가 어딨어.
 const userFilter = { __v: 0 };
-const io = require("socket.io")();
 
 /**
  * @typedef defaultResponse
@@ -166,8 +166,9 @@ export const scanQr: RequestHandler = async (req, res, next) => {
     const currentTime = new Date().toUTCString;
     console.log(`currentTime:${currentTime}`);
 
-    io.sockets.emit("message", JSON.stringify({ msg: "OK", token }));
+    io.emit("message", { msg: "OK", token });
 
+    // io.emit("message", { msg: "hello" });
     return res.status(HTTP.OK).json({ msg: `${currentTime}` });
   } catch (error) {
     console.error(`scanQr Error`);
@@ -262,4 +263,16 @@ export const refreshTokenByToken = async (token: string) => {
   console.log(`--save new token${saveToken}`);
 
   return { msg: "OK", token: newToken };
+};
+
+export const testing: RequestHandler = async (req, res, next) => {
+  try {
+    console.log("emitted!");
+    io.emit("message", { msg: "hello" });
+    return res.status(HTTP.OK).json({ msg: `정상반환` });
+  } catch (error) {
+    console.error(`testing Error`);
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error" });
+  }
 };
