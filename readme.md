@@ -25,7 +25,7 @@
 
 ## API
 
-[API 문서)(https://app.gitbook.com/@jjongwoo-dev/s/madcamp/qr-api)
+[API 문서](https://app.gitbook.com/@jjongwoo-dev/s/madcamp/qr-api)
 
 > V3 api을 만들 때부터 명세서를 작성해서 v3만 존재합니다.
 
