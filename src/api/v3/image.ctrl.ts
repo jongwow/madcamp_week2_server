@@ -1,46 +1,9 @@
 import { RequestHandler } from "express";
-import TmpImage from "../../models/tmpImage";
 import * as path from "path";
 import * as fs from "fs";
+import TmpImage from "../../models/tmpImage";
 
 const imagePath = path.join(__dirname, "../../../public/images");
-
-// img1.jpg 를 반환
-export const getRandomImage: RequestHandler = async (req, res, next) => {
-  try {
-    const filename = "/home/kaist/mongo_week2/public/images/img1.jpg";
-    res.sendFile(filename);
-  } catch (error) {
-    console.error(`getRandomImage Error`);
-    console.error(error);
-  }
-  return res.status(500).json({ msg: "Internal Error", error: true });
-};
-
-export const getImageByName: RequestHandler = async (req, res, next) => {
-  try {
-    // 요청으로 들어온 이름을 가져옴
-    const DTO = {
-      fileName: req.params.image_name.trim(),
-    };
-
-    // 파일의 경로를 가져온다.
-    const filePath = path.join(imagePath, DTO.fileName);
-    console.log(`path:${filePath}`);
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(404).json({ msg: "Not Found", error: true });
-      } else {
-        return res.status(200).sendFile(filePath);
-      }
-    });
-  } catch (error) {
-    console.error(`getRandomImage Error`);
-    console.error(error);
-    return res.status(500).json({ msg: "Internal Error", error: true });
-  }
-};
 
 export const uploadImage: RequestHandler = async (req, res, next) => {
   try {
@@ -71,9 +34,10 @@ export const uploadImage: RequestHandler = async (req, res, next) => {
       }
 
       // err가 존재하지 않으므로 성공반환
-      return res
-        .status(200)
-        .json({ msg: `성공! 이름:${fileInfo.name}, size:${fileInfo.size}` });
+      return res.status(200).json({
+        msg: `성공! 이름:${fileInfo.name}, size:${fileInfo.size}`,
+        url: newImage.fileName,
+      });
     });
   } catch (error) {
     console.error(`uploadImage Error`);
@@ -94,11 +58,27 @@ export const getImageUrls: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deleteImageByName: RequestHandler = async (req, res, next) => {
+export const getImageByName: RequestHandler = async (req, res, next) => {
   try {
-    return res.status(200).json({ msg: "아직 구현 미완" });
+    // 요청으로 들어온 이름을 가져옴
+    const dto = {
+      fileName: req.params.image_name.trim(),
+    };
+
+    // 파일의 경로를 가져온다.
+    const filePath = path.join(imagePath, dto.fileName);
+    console.log(`path:${filePath}`);
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(404).json({ msg: "Not Found", error: true });
+      } else {
+        return res.status(200).sendFile(filePath);
+      }
+    });
   } catch (error) {
-    console.error(`DeleteImage Error`);
+    console.error(`getRandomImage Error`);
     console.error(error);
     return res.status(500).json({ msg: "Internal Error", error: true });
   }

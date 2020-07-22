@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import User from "../../models/fbUser";
 
+const userFilter = { __v: 0 };
+
 export const login: RequestHandler = async (req, res, next) => {
   try {
     const loginDTO = {
@@ -16,11 +18,24 @@ export const login: RequestHandler = async (req, res, next) => {
     } else {
       console.log("TEST login Success!!!");
       console.log(`VALUE: ${loginDTO.id}`);
-      const fbUser = await User.findOne({ id: "123123" }).exec();
+      const fbUser = await User.findOne({ id: "123123" })
+        .select(userFilter)
+        .exec();
       return res.status(200).json({ msg: "OK", error: false, user: fbUser });
     }
   } catch (error) {
     console.error("login Error");
+    console.error(error);
+    return res.status(500).json({ msg: "Internal Error", error: true });
+  }
+};
+
+export const getUsers: RequestHandler = async (req, res, next) => {
+  try {
+    const users = await User.find().select(userFilter);
+    return res.status(200).json({ msg: "성공", error: false, users: users });
+  } catch (error) {
+    console.error("getUsers Error");
     console.error(error);
     return res.status(500).json({ msg: "Internal Error", error: true });
   }
