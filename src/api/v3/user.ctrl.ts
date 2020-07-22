@@ -149,7 +149,8 @@ export const facebookLogin: RequestHandler = async (req, res, next) => {
 
 export const getUsers: RequestHandler = async (req, res, next) => {
   try {
-    const users = await User.find().select(userFilter);
+    const users = await User.find().sort('name').select(userFilter);
+		console.log(users);
     return res.status(200).json({ msg: "성공", error: false, users: users });
   } catch (error) {
     console.error("getUsers Error");
