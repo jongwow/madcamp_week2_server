@@ -22,16 +22,13 @@ app.use(function (req, res, next) {
 
 app.use("/public", Express.static("public"));
 
-// Node.js의 native Promise 사용
-// mongoose.Promise = Promise; 이젠 필요없다고 한다...?
-// console.log(dbUrl);
 // CONNECT TO MONGODB SERVER
 mongoose
   .connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Successfully connected to mongodb"))
+  .then(() => console.log("3. Successfully connected to mongodb"))
   .catch((e) => {
     console.error("DB 연결 실패!");
     console.error(e);
