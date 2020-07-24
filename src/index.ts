@@ -11,10 +11,10 @@ const port = PORT || 3000;
 
 // Server 열기
 const http = server.listen(port, () => {
-	console.log(`listening to port ${port}`);
+  console.log(`2. listening to port ${port}`);
 });
 
-// socket 열기
+// socket 열기 TODO: 의존성 역전부분;
 export const io = Socket(http);
 
 io.on("connect", (socket) => {

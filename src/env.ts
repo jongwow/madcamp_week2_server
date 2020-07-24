@@ -3,7 +3,8 @@ import * as path from "path";
 
 const { NODE_ENV } = process.env;
 
-console.log(`node enviornment is ${NODE_ENV}`);
+console.log(`*** Starting Server. 3 steps ***`);
+console.log(`1. node enviornment is ${NODE_ENV}`);
 
 dotenv.config({
   path: path.resolve(

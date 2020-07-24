@@ -1,5 +1,4 @@
 import { Router } from "express";
-import * as bookCtrl from "./book.ctrl";
 import * as userCtrl from "./user.ctrl";
 import * as imageCtrl from "./image.ctrl";
 
@@ -15,10 +14,6 @@ router.get("/image/list", imageCtrl.getImageUrls);
 router.post("/image/upload", uploader.single("img"), imageCtrl.uploadImage);
 router.get("/image/:image_name", imageCtrl.getImageByName);
 router.delete("/image/:image_name", imageCtrl.deleteImageByName);
-
-router.get("/book", bookCtrl.getBooks);
-router.get("/book/:book_id", bookCtrl.getBookById);
-router.post("/book", bookCtrl.insertBook);
 
 router.post("/user/test", userCtrl.test);
 // router.post("/user/testLogin", userCtrl.testLogin);

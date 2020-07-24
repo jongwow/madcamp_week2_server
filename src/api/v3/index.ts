@@ -37,6 +37,4 @@ router.get("/image/:image_name", imageCtrl.getImageByName);
 router.post("/profile", uploader.single("img"), profileCtrl.uploadImage);
 router.get("/profile/:image_name", profileCtrl.getImageByName);
 
-router.get("/testing", qrCtrl.testing);
-
 export default router;
